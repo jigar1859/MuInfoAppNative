@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "435883182307",
+    "firebase_url": "https://muinfoappnative.firebaseio.com",
+    "project_id": "muinfoappnative",
+    "storage_bucket": "muinfoappnative.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:435883182307:android:b35d71475e8190cd",
+        "android_client_info": {
+          "package_name": "com.jsksolutions"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "435883182307-j276eu47a5f1m30ifvhsrmgjsg8r67dh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxtbFQXsBW7FyEWzNerZMiRpDV5PAZzs0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
