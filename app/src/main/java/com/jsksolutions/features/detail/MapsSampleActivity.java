@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -25,11 +26,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jsksolutions.R;
 
-import javax.annotation.Nullable;
 
+@SuppressWarnings("deprecation")
 public class MapsSampleActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    private static final int FINE_LOCATION_PERMISSION_REQUEST = 1;
-    private static final int CONNECTION_RESOLUTION_REQUEST = 2;
+    private static final int INITIAL_REQUEST=1337;
+    private static final int CAMERA_REQUEST=INITIAL_REQUEST+1;
+    private static final int CONTACTS_REQUEST=INITIAL_REQUEST+2;
+    private static final int LOCATION_REQUEST=INITIAL_REQUEST+3;
+    private static final int FINE_LOCATION_PERMISSION_REQUEST = INITIAL_REQUEST+4;
+    private static final int CONNECTION_RESOLUTION_REQUEST = INITIAL_REQUEST+5;
+    private static final int COURSE_LOCATION_PERMISSION_REQUEST = INITIAL_REQUEST+6;
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
     private Location mLastLocation;
@@ -113,26 +119,36 @@ public class MapsSampleActivity extends FragmentActivity implements OnMapReadyCa
     }
 
     private void findLocation() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    FINE_LOCATION_PERMISSION_REQUEST);
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             LatLng myLat = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(myLat).title("Your Current Location"));
+            // Add a marker in Sydney and move the camera
+            mMap.addMarker(new MarkerOptions().position(myLat).title("Maker at your Location"));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(myLat));
-
         } else {
+            ActivityCompat.requestPermissions(this, new String[] {
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION },
+                    LOCATION_REQUEST);
+            // Add a marker in Sydney and move the camera
+            LatLng sydney = new LatLng(-34, 151);
+            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        }
+        /*else {
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             LatLng myLat = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             // Add a marker in Sydney and move the camera
             LatLng sydney = new LatLng(-34, 151);
             mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(myLat));
-        }
+        }*/
     }
 
     @Override
