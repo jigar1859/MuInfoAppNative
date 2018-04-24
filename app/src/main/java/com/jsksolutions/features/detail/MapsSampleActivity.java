@@ -22,6 +22,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jsksolutions.R;
@@ -123,32 +124,34 @@ public class MapsSampleActivity extends FragmentActivity implements OnMapReadyCa
                 PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) ==
                         PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(true);
-
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            LatLng myLat = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            // Add a marker in Sydney and move the camera
-            mMap.addMarker(new MarkerOptions().position(myLat).title("Maker at your Location"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(myLat));
+            showMarkersOnMap();
         } else {
             ActivityCompat.requestPermissions(this, new String[] {
                             Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_COARSE_LOCATION },
                     LOCATION_REQUEST);
-            // Add a marker in Sydney and move the camera
-            LatLng sydney = new LatLng(-34, 151);
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            showMarkersOnMap();
         }
-        /*else {
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            LatLng myLat = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            // Add a marker in Sydney and move the camera
-            LatLng sydney = new LatLng(-34, 151);
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(myLat));
-        }*/
+    }
+
+    private void showMarkersOnMap() {
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        LatLng myLat = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        // Add a marker in Sydney and move the camera
+        mMap.addMarker(new MarkerOptions().position(myLat).title("Maker at your Location"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(myLat));
+
+        // Marker for the University Location
+        LatLng muLatLong = new LatLng(19.073212,72.854195);
+        mMap.addMarker(
+                new MarkerOptions()
+                        .position(muLatLong)
+                        .title("University of Mumbai")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(10.0f));
     }
 
     @Override
